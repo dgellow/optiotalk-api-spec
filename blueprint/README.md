@@ -26,13 +26,14 @@ docker run -v $(pwd):/tmp -t dgellow/aglio -i /tmp/api.md --theme-template tripl
 https://github.com/Aconex/drakov
 
 ```
-npm intsall -g drakov
+docker run --rm -it -p 3000:3000 -v $(pwd):/workdir dgellow/drakov -f /workdir/api.md --public
 ```
-
-## Mock Client
-
-**TODO**
 
 ## Test implementation
 
 https://dredd.readthedocs.io/en/latest/index.html
+
+```
+npm install -g dredd
+dredd ./api.md http://localhost:3000
+```

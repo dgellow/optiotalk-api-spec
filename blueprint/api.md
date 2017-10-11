@@ -38,8 +38,9 @@ Resources related to a user bank accounts.
 
 You may register a new bank account using this action.
 
-+ iban (string)
-+ bic (string)
++ Attributes
+  + iban (string)
+  + bic (string)
 
 + Request (application/json)
 
@@ -77,9 +78,9 @@ You may register a new bank account using this action.
 ## Bank account [/accounts/{account_id}]
 
 + Parameters
-  + account_id (string) - ID of the Bank account
+  + account_id: `gBnoYf07m3FuB46Oudmd3YCEVxNq` (string) - ID of the Bank account
 
-### View a Bank account Detail [GET]
+### View a Bank account detail [GET]
 
 + Response 200 (application/json)
 
@@ -92,8 +93,10 @@ You may register a new bank account using this action.
             "latest_transactions": [
                 {
                     "date": "2017-10-09T13:10:01.530Z",
-                    "type": "maestro debit"
-                    "to": "El dios del jamon",
+                    "type": "maestro debit",
+                    "action": "debit",
+                    "name": "El dios del jamon",
+                    "iban": "ES670024624383249320P",
                     "amount": "10",
                     "cents": "20",
                     "currency": "eur",
@@ -110,3 +113,70 @@ You may register a new bank account using this action.
 Resources related to transfers of money between bank accounts.
 
 ## Transfers Collection [/transfers]
+
+### Create a new transfer [POST]
+
++ Attributes
+  + type (string)
+  + to (string)
+  + action (string)
+  + name (string)
+  + iban (string)
+  + amount (string)
+  + cents (string)
+  + currency (string)
+
++ Request (application/json)
+
+        {
+            "type": "maestro debit",
+            "action": "debit",
+            "name": "El dios del jamon",
+            "iban": "ES670024624383249320P",
+            "amount": "10",
+            "cents": "20",
+            "currency": "eur"
+        }
+
++ Response 201 (application/json)
+    + Headers
+
+            Location: /transfers/cSfPxwbnXgiopMZ78FjrIWWebscW
+
+    + Body
+
+            {
+                "id": "cSfPxwbnXgiopMZ78FjrIWWebscW",
+                "date": "2017-10-09T13:10:01.530Z",
+                "type": "maestro debit",
+                "action": "debit",
+                "name": "El dios del jamon",
+                "iban": "ES670024624383249320P",
+                "amount": "10",
+                "cents": "20",
+                "currency": "eur"
+            }
+
+## Transfer [/transfers/{transfer_id}]
+
++ Parameters
+  + transfer_id: `cSfPxwbnXgiopMZ78FjrIWWebscW` (string) - ID of the Transfer
+
+### View a Transfer detail [GET]
++ Response 200 (application/json)
+
+        {
+            "id": "cSfPxwbnXgiopMZ78FjrIWWebscW",
+            "date": "2017-10-09T13:10:01.530Z",
+            "type": "maestro debit",
+            "action": "debit",
+            "name": "El dios del jamon",
+            "iban": "ES670024624383249320P",
+            "amount": "10",
+            "cents": "20",
+            "currency": "eur"
+        }
+
+### Cancel [DELETE]
+
++ Response 204
