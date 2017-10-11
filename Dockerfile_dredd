@@ -1,0 +1,10 @@
+FROM node:alpine
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache git && \
+    npm install -g dredd
+
+WORKDIR /workdir
+VOLUME /workdir
+
+ENTRYPOINT ["dredd"]

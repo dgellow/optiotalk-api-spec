@@ -1,0 +1,8 @@
+FROM node:alpine
+
+RUN npm install -g drakov
+
+WORKDIR /workdir
+VOLUME /workdir
+
+ENTRYPOINT ["drakov"]
