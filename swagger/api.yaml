@@ -1,0 +1,340 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: GOFI Banking Service Provider API
+host: www.example.com
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /banks:
+    get:
+      summary: List All Banks
+      tags:
+        - Banks
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Bank'
+          examples:
+            application/json:
+            - name: Postbank Berlin
+              country: de
+              bic: PBNKDEFFXXX
+            - name: UBS Switzerland
+              country: ch
+              bic: UBSWCHZH80A
+
+  /accounts:
+    post:
+      summary: Register a new bank account
+      tags:
+        - Bank accounts
+      produces:
+        - application/json
+      parameters:
+        - name: account
+          in: body
+          required: true
+          description: ''
+          schema:
+            type: object
+            properties:
+              iban:
+                type: string
+              bic:
+                type: string
+      responses:
+        201:
+          description: ''
+          schema:
+            $ref: '#/definitions/BankAccount'
+          examples:
+            application/json:
+              id: gBnoYf07m3FuB46Oudmd3YCEVxNq
+              latest_crawl_at: "2017-10-11T08:40:51.620Z"
+              iban: CH150024324343241640P
+              bic: UBSWCHZH80A
+              type: current
+              latest_transactions:
+                - date: "2017-10-09T13:10:01.530Z"
+                  type: maestro debit
+                  to: El dios del jamon
+                  amount: "10"
+                  cents: "20"
+                  currency: eur
+
+  /accounts/{account_id}:
+    get:
+      summary: View a Bank account detail
+      tags:
+        - Bank accounts
+      produces:
+        - application/json
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          type: string
+          description: ID of the Bank account
+      responses:
+        200:
+          description: ''
+          schema:
+            type: object
+          examples:
+            id: gBnoYf07m3FuB46Oudmd3YCEVxNq
+            latest_crawl_at: "2017-10-11T08:40:51.620Z"
+            iban: CH150024324343241640P
+            bic: UBSWCHZH80A
+            type: current
+            latest_transactions:
+              - date: "2017-10-09T13:10:01.530Z"
+                type: maestro debit
+                to: El dios del jamon
+                amount: "10"
+                cents: "20"
+                currency: eur
+    delete:
+      summary: Unregister
+      tags:
+        - Bank accounts
+      produces:
+        - application/json
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          type: string
+          description: ID of the Bank account
+      responses:
+        204:
+          description: ''
+
+  /transfers:
+    post:
+      description: ''
+      summary: Create a new transfer
+      tags:
+        - Transfers
+      produces:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateANewTransferRequest'
+      responses:
+        201:
+          description: ''
+          schema:
+            $ref: '#/definitions/CreateANewTransferResponse'
+          examples:
+            application/json:
+              id: cSfPxwbnXgiopMZ78FjrIWWebscW
+              date: 2017-10-09T13:10:01.5300000Z
+              type: maestro debit
+              action: debit
+              name: El dios del jamon
+              iban: ES670024624383249320P
+              amount: 10
+              cents: 20
+              currency: eur
+
+  /transfers/{transfer_id}:
+    get:
+      summary: View a Transfer detail
+      tags:
+      - Transfers
+      operationId: View a Transfer detail
+      produces:
+      - application/json
+      parameters:
+      - name: transfer_id
+        in: path
+        required: true
+        type: string
+        description: ID of the Transfer
+      responses:
+        200:
+          description: ''
+          schema:
+            $ref: '#/definitions/ViewATransferDetailResponse'
+          examples:
+            application/json:
+              id: cSfPxwbnXgiopMZ78FjrIWWebscW
+              date: 2017-10-09T13:10:01.5300000Z
+              type: maestro debit
+              action: debit
+              name: El dios del jamon
+              iban: ES670024624383249320P
+              amount: 10
+              cents: 20
+              currency: eur
+    delete:
+      summary: Cancel
+      tags:
+      - Transfers
+      operationId: Cancel
+      produces:
+      - application/json
+      parameters:
+      - name: transfer_id
+        in: path
+        required: true
+        type: string
+        description: ID of the Transfer
+      responses:
+        204:
+          description: ''
+
+definitions:
+  Bank:
+    title: List All Banks response
+    example:
+      name: Postbank Berlin
+      country: de
+      bic: PBNKDEFFXXX
+    type: object
+    properties:
+      name:
+        type: string
+      country:
+        type: string
+      bic:
+        type: string
+    required:
+    - name
+    - country
+    - bic
+  BankAccount:
+    title: Register a New Bank account request
+    type: object
+    properties:
+      iban:
+        type: string
+      bic:
+        type: string
+  CreateANewTransferRequest:
+    title: Create a new transfer request
+    example:
+      type: maestro debit
+      action: debit
+      name: El dios del jamon
+      iban: ES670024624383249320P
+      amount: 10
+      cents: 20
+      currency: eur
+    type: object
+    properties:
+      type:
+        type: string
+      to:
+        type: string
+      action:
+        type: string
+      name:
+        type: string
+      iban:
+        type: string
+      amount:
+        type: string
+      cents:
+        type: string
+      currency:
+        type: string
+  CreateANewTransferResponse:
+    title: Create a new transfer response
+    example:
+      id: cSfPxwbnXgiopMZ78FjrIWWebscW
+      date: 2017-10-09T13:10:01.5300000Z
+      type: maestro debit
+      action: debit
+      name: El dios del jamon
+      iban: ES670024624383249320P
+      amount: 10
+      cents: 20
+      currency: eur
+    type: object
+    properties:
+      id:
+        type: string
+      date:
+        type: string
+      type:
+        type: string
+      action:
+        type: string
+      name:
+        type: string
+      iban:
+        type: string
+      amount:
+        type: string
+      cents:
+        type: string
+      currency:
+        type: string
+    required:
+      - id
+      - date
+      - type
+      - action
+      - name
+      - iban
+      - amount
+      - cents
+      - currency
+  ViewATransferDetailResponse:
+    title: View a Transfer detail response
+    example:
+      id: cSfPxwbnXgiopMZ78FjrIWWebscW
+      date: 2017-10-09T13:10:01.5300000Z
+      type: maestro debit
+      action: debit
+      name: El dios del jamon
+      iban: ES670024624383249320P
+      amount: 10
+      cents: 20
+      currency: eur
+    type: object
+    properties:
+      id:
+        type: string
+      date:
+        type: string
+      type:
+        type: string
+      action:
+        type: string
+      name:
+        type: string
+      iban:
+        type: string
+      amount:
+        type: string
+      cents:
+        type: string
+      currency:
+        type: string
+    required:
+      - id
+      - date
+      - type
+      - action
+      - name
+      - iban
+      - amount
+      - cents
+      - currency
